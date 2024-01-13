@@ -61,7 +61,7 @@ namespace Lumia.Areas.Admin.Controllers
             AppUser user = await _userManager.FindByNameAsync(login.UserNameOrEmail);
             if(user == null)
             {
-                user = await _userManager.FindByEmailAsync(login.Email);
+                user = await _userManager.FindByEmailAsync(login.UserNameOrEmail);
                 if(user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Username, Email or Passsword is wrong");

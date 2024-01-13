@@ -3,13 +3,15 @@ using Lumia.DAL;
 using Lumia.Models;
 using Lumia.Utilities.Extetions;
 using Lumia.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lumia.Areas.Admin.Controllers
 {
     [Area("Admin")]
-
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;
@@ -20,7 +22,8 @@ namespace Lumia.Areas.Admin.Controllers
             _context = context;
             _env = env;
         }
-
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Index(int page = 1)
         {
             if (page <= 0) return BadRequest();
@@ -38,6 +41,8 @@ namespace Lumia.Areas.Admin.Controllers
             return View(vM);
 
         }
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Create()
         {
             CreateProductVM create = new CreateProductVM
@@ -54,7 +59,7 @@ namespace Lumia.Areas.Admin.Controllers
                 create.Categories = await _context.Categories.ToListAsync();
                 return View(create);
             }
-            bool result = await _context.Products.AnyAsync(x => x.Name.Trim().ToLower() == x.Name.Trim().ToLower());
+            bool result = await _context.Products.AnyAsync(x => x.Name.Trim().ToLower() == create.Name.Trim().ToLower());
             if (result)
             {
                 create.Categories = await _context.Categories.ToListAsync();
@@ -86,6 +91,8 @@ namespace Lumia.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
@@ -113,7 +120,7 @@ namespace Lumia.Areas.Admin.Controllers
             }
             Product item = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null) return NotFound();
-            bool result = await _context.Products.AnyAsync(x => x.Name.Trim().ToLower() == x.Name.Trim().ToLower() && x.Id != id);
+            bool result = await _context.Products.AnyAsync(x => x.Name.Trim().ToLower() == update.Name.Trim().ToLower() && x.Id != id);
             if (result)
             {
                 update.Categories = await _context.Categories.ToListAsync();
@@ -146,7 +153,8 @@ namespace Lumia.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();

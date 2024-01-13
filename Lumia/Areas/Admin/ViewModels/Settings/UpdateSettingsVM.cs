@@ -1,4 +1,6 @@
-﻿namespace Lumia.Areas.Admin.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Lumia.Areas.Admin.ViewModels
 {
     public class UpdateSettingsVM
     {

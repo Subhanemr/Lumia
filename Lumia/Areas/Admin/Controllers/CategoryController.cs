@@ -1,12 +1,15 @@
 ﻿using Lumia.Areas.Admin.ViewModels;
 using Lumia.DAL;
 using Lumia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lumia.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     
     public class CategoryController : Controller
     {
@@ -16,12 +19,15 @@ namespace Lumia.Areas.Admin.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Index()
         {
             ICollection<Category> items = await _context.Categories.Include(x => x.Products).ToListAsync();
             return View(items);
         }
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public IActionResult Create()
         {
             return View();
@@ -30,7 +36,7 @@ namespace Lumia.Areas.Admin.Controllers
         public async Task<IActionResult> Create(CreateCategoryVM create)
         {
             if (!ModelState.IsValid) return View(create);
-            bool result = await _context.Categories.AnyAsync(x => x.Name.Trim().ToLower() == x.Name.Trim().ToLower());
+            bool result = await _context.Categories.AnyAsync(x => x.Name.Trim().ToLower() == create.Name.Trim().ToLower());
             if (result)
             {
                 ModelState.AddModelError("Name", "Is exists");
@@ -42,6 +48,8 @@ namespace Lumia.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
@@ -56,7 +64,7 @@ namespace Lumia.Areas.Admin.Controllers
             if (!ModelState.IsValid) return View(update);
             Category item = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null) return NotFound();
-            bool result = await _context.Categories.AnyAsync(x => x.Name.Trim().ToLower() == x.Name.Trim().ToLower() && x.Id != id);
+            bool result = await _context.Categories.AnyAsync(x => x.Name.Trim().ToLower() == update.Name.Trim().ToLower() && x.Id != id);
             if (result)
             {
                 ModelState.AddModelError("Name", "Is exists");
@@ -67,6 +75,8 @@ namespace Lumia.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
 
         public async Task<IActionResult> Delete(int id)
         {

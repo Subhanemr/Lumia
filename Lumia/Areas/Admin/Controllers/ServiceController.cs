@@ -1,6 +1,7 @@
 ﻿using Lumia.Areas.Admin.ViewModels;
 using Lumia.DAL;
 using Lumia.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
@@ -8,7 +9,8 @@ using System.Drawing;
 namespace Lumia.Areas.Admin.Controllers
 {
     [Area("Admin")]
-
+    [Authorize]
+    [AutoValidateAntiforgeryToken]
     public class ServiceController : Controller
     {
         private readonly AppDbContext _context;
@@ -17,7 +19,8 @@ namespace Lumia.Areas.Admin.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Index()
         {
             ICollection<Service> items = await _context.Services.ToListAsync();
@@ -31,7 +34,7 @@ namespace Lumia.Areas.Admin.Controllers
         public async Task<IActionResult> Create(CreateServiceVM create)
         {
             if (!ModelState.IsValid) return View(create);
-            bool result = await _context.Services.AnyAsync(x => x.Title.Trim().ToLower() == x.Title.Trim().ToLower());
+            bool result = await _context.Services.AnyAsync(x => x.Title.Trim().ToLower() == create.Title.Trim().ToLower());
             if (result)
             {
                 ModelState.AddModelError("Name", "Is exists");
@@ -48,6 +51,8 @@ namespace Lumia.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Update(int id)
         {
             if (id <= 0) return BadRequest();
@@ -67,7 +72,7 @@ namespace Lumia.Areas.Admin.Controllers
             if (!ModelState.IsValid) return View(update);
             Service item = await _context.Services.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null) return NotFound();
-            bool result = await _context.Services.AnyAsync(x => x.Title.Trim().ToLower() == x.Title.Trim().ToLower() && x.Id != id);
+            bool result = await _context.Services.AnyAsync(x => x.Title.Trim().ToLower() == update.Title.Trim().ToLower() && x.Id != id);
             if (result)
             {
                 ModelState.AddModelError("Name", "Is exists");
@@ -80,7 +85,8 @@ namespace Lumia.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize]
+        [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             if (id <= 0) return BadRequest();

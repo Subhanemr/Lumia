@@ -247,3 +247,6 @@ C:\Users\T x\Desktop\Lumia\Lumia\obj\Debug\net6.0\refint\Lumia.dll
 C:\Users\T x\Desktop\Lumia\Lumia\obj\Debug\net6.0\Lumia.pdb
 C:\Users\T x\Desktop\Lumia\Lumia\obj\Debug\net6.0\Lumia.genruntimeconfig.cache
 C:\Users\T x\Desktop\Lumia\Lumia\obj\Debug\net6.0\ref\Lumia.dll
+C:\Users\T x\Desktop\Lumia\Lumia\obj\Debug\net6.0\Lumia.RazorAssemblyInfo.cache
+C:\Users\T x\Desktop\Lumia\Lumia\obj\Debug\net6.0\Lumia.RazorAssemblyInfo.cs
+C:\Users\T x\Desktop\Lumia\Lumia\bin\Debug\net6.0\Lumia.staticwebassets.runtime.json

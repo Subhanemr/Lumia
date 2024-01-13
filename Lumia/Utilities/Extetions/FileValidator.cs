@@ -11,7 +11,7 @@ namespace Lumia.Utilities.Extetions
         }
         public static bool LimitSize(this IFormFile file, int limitSize = 10)
         {
-            if (file.Length <= limitSize) return true;
+            if (file.Length <= limitSize * 1024 *1024) return true;
             return false;
         }
         public static string GetGuidName(string fullFileName)
