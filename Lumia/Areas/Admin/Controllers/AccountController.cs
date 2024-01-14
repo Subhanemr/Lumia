@@ -47,7 +47,7 @@ namespace Lumia.Areas.Admin.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction("Index", "Home", new { Area = "" });
         }
 
         public IActionResult Login()
@@ -55,7 +55,7 @@ namespace Lumia.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginVM login)
+        public async Task<IActionResult> Login(LoginVM login, string? returnUrl)
         {
             if (!ModelState.IsValid) return View(login);
             AppUser user = await _userManager.FindByNameAsync(login.UserNameOrEmail);
@@ -79,7 +79,9 @@ namespace Lumia.Areas.Admin.Controllers
                 ModelState.AddModelError(string.Empty, "Username, Email or Passsword is wrong");
                 return View(login);
             }
-            return RedirectToAction("Index", "Home");
+            if(returnUrl != null) return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Home", new { Area = "" });
         }
 
     }
